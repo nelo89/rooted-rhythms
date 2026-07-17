@@ -237,7 +237,14 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--ink-soft);
+    margin-bottom: 0.25rem;
+  }
+  .sub-definition {
+    font-size: 12px;
+    color: var(--ink-ghost);
+    font-style: italic;
     margin-bottom: 0.75rem;
+    line-height: 1.4;
   }
 
   /* Input row */
@@ -350,6 +357,31 @@
   .path-step span { font-size: 11px; color: var(--ink-ghost); }
   .path-step.active strong { color: var(--teal-dark); }
   .path-arrow { font-size: 16px; color: var(--ink-ghost); text-align: center; }
+  .stage-definitions {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 4px;
+    margin-bottom: 1.25rem;
+  }
+  .stage-def {
+    background: var(--paper-mid);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.5rem;
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+    border: 1px solid var(--border);
+  }
+  .stage-def strong {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--teal-dark);
+    margin-bottom: 4px;
+  }
+  @media (max-width: 600px) { .stage-definitions { grid-template-columns: 1fr 1fr; } }
 
   /* Checkboxes */
   .check-item {
@@ -524,7 +556,7 @@
       <div id="aff-1" class="affirmation"></div>
       <div class="two-col">
         <div class="sub-card">
-          <div class="sub-label">Community &amp; audience</div>
+          <div class="sub-label">Community &amp; audience</div><div class="sub-definition">The people who show up for your work. Ticket buyers, students, followers, neighbors, regulars.</div>
           <div class="input-row">
             <input type="text" id="comm-in" placeholder="Add a name or group...">
             <button class="add-btn" onclick="addTag('comm','comm-in','aff-1',aff.comm)">Add</button>
@@ -532,7 +564,7 @@
           <div class="tag-area" id="comm-tags"></div>
         </div>
         <div class="sub-card">
-          <div class="sub-label">Institutional &amp; organizational</div>
+          <div class="sub-label">Institutional &amp; organizational</div><div class="sub-definition">Organizations that fund, partner with, or amplify your work. Grants, fiscal sponsors, foundations, government programs, partner orgs.</div>
           <div class="input-row">
             <input type="text" id="inst-in" placeholder="Funders, partners...">
             <button class="add-btn" onclick="addTag('inst','inst-in','aff-1',aff.inst)">Add</button>
@@ -542,7 +574,7 @@
       </div>
       <div class="two-col">
         <div class="sub-card">
-          <div class="sub-label">Individual champions</div>
+          <div class="sub-label">Individual champions</div><div class="sub-definition">Specific people who advocate for you personally. Advisors, mentors, collaborators, that one person who always shows up and brings others.</div>
           <div class="input-row">
             <input type="text" id="champ-in" placeholder="Advisors, collaborators...">
             <button class="add-btn" onclick="addTag('champ','champ-in','aff-1',aff.champ)">Add</button>
@@ -550,7 +582,7 @@
           <div class="tag-area" id="champ-tags"></div>
         </div>
         <div class="sub-card">
-          <div class="sub-label">Platform &amp; in-kind</div>
+          <div class="sub-label">Platform &amp; in-kind</div><div class="sub-definition">Non-cash resources you have access to. A venue that gives you space, a friend who designs your flyers, a podcast that features you, equipment you borrow.</div>
           <div class="input-row">
             <input type="text" id="plat-in" placeholder="Venues, media, reach...">
             <button class="add-btn" onclick="addTag('plat','plat-in','aff-1',aff.plat)">Add</button>
@@ -646,9 +678,17 @@
         <div class="path-step" id="ps-3" onclick="selectStage(3)"><strong>Sustain</strong><span>Keeps coming</span></div>
       </div>
 
+      <div class="stage-definitions">
+        <div class="stage-def"><strong>Encounter</strong>Someone sees your work for the first time. A show, an Instagram post, a friend’s recommendation, a flyer. Where does first contact actually happen in your community?</div>
+        <div class="stage-def"><strong>Engage</strong>They come back or take action — buy a ticket, take a class, share your post, show up to something. What does engagement look like specifically in your ecosystem?</div>
+        <div class="stage-def"><strong>Give</strong>They contribute something — money, labor, platform, time. What makes someone in your community give in the moment? What does that ask look like?</div>
+        <div class="stage-def"><strong>Sustain</strong>They keep showing up and bringing others. What has actually converted someone from occasional to consistent in your world? Name the thing.</div>
+      </div>
+
       <div id="stage-area" style="display:none">
         <div class="sub-card">
-          <div class="sub-label" id="stage-label">Select a stage above</div>
+          <div class="sub-label" id="stage-label">Select a stage above to add your notes</div>
+          <p style="font-size:13px;color:var(--ink-soft);margin-bottom:0.75rem;font-style:italic">Click a stage, then add what actually moves people forward in your specific community — not in theory, in your ecosystem.</p>
           <div class="input-row">
             <input type="text" id="stage-in" placeholder="What moves someone to this stage in your community?">
             <button class="add-btn" onclick="addStageNote()">Add</button>
@@ -897,59 +937,135 @@ function downloadSummary() {
   var org = document.getElementById('user-org').value.trim() || 'My project';
   var ids = ['s-earned','s-grants','s-community','s-inkind','s-recurring'];
   var streamNames = ['Earned income','Grants & institutional','Community giving','In-kind & platform','Recurring & sustaining'];
+  var streamColors = ['#2EAF85','#7B6CF0','#C8832A','#C2527A','#2A8FC8'];
   var total = ids.reduce(function(s,id){ return s+(parseInt(document.getElementById(id).value)||0); }, 0);
 
-  var lines = [
-    'COMMUNITY REVENUE MAP',
-    'Rooted Rhythms Framework | Dance Business Bootcamp 2026 | Dance/USA',
-    'Facilitated by Nneka Okeke',
-    '='.repeat(60),
-    '',
-    'Name: ' + name,
-    'Organization / Project: ' + org,
-    '',
-    'STEP 1 — RELATIONSHIP ASSET INVENTORY',
-    '-'.repeat(40),
-    'Community & audience: ' + (tags.comm.join(', ') || '—'),
-    'Institutional & organizational: ' + (tags.inst.join(', ') || '—'),
-    'Individual champions: ' + (tags.champ.join(', ') || '—'),
-    'Platform & in-kind: ' + (tags.plat.join(', ') || '—'),
-    '',
-    'STEP 2 — REVENUE STREAM MAPPING',
-    '-'.repeat(40),
-  ];
-  ids.forEach(function(id,i){
-    lines.push(streamNames[i] + ': $' + (parseInt(document.getElementById(id).value)||0).toLocaleString());
-  });
-  lines.push('TOTAL ESTIMATED ANNUAL REVENUE: $' + total.toLocaleString());
-  lines.push('');
-  lines.push('STEP 3 — COMMUNITY GIVING PATHWAY');
-  lines.push('-'.repeat(40));
-  stageNames.forEach(function(s,i){
-    lines.push(s + ': ' + (stageNotes[i].join('; ') || '—'));
-  });
-  lines.push('');
-  lines.push('STEP 4 — EMERGING LEADERS');
-  lines.push('-'.repeat(40));
+  var leaders = [];
   document.querySelectorAll('#leader-rows .leader-grid').forEach(function(row){
     var inputs = row.querySelectorAll('input');
     var n = inputs[0].value.trim();
-    var s = inputs[1].value.trim();
+    var sig = inputs[1].value.trim();
     var c = inputs[2].value.trim();
-    if(n) lines.push(n + ' | Signal: ' + (s||'—') + ' | Next step: ' + (c||'—'));
+    if(n) leaders.push({name:n, signal:sig||'—', next:c||'—'});
   });
-  lines.push('');
-  lines.push('='.repeat(60));
-  lines.push('Generated at Rooted Rhythms: Designing Culturally Grounded Revenue Ecosystems');
-  lines.push('Dance Business Bootcamp 2026 | Dance/USA | Nneka Okeke');
 
-  var blob = new Blob([lines.join('\n')], {type:'text/plain'});
+  var habits = [];
+  document.querySelectorAll('#habits-list .check-item').forEach(function(item){
+    if(item.querySelector('.check-box.checked'))
+      habits.push(item.querySelector('.check-text').textContent.trim());
+  });
+
+  var streamsHtml = ids.map(function(id,i){
+    var val = parseInt(document.getElementById(id).value)||0;
+    return '<div class="sr"><div class="sd" style="background:'+streamColors[i]+'"></div><div class="sn">'+streamNames[i]+'</div><div class="sa">$'+val.toLocaleString()+'</div></div>';
+  }).join('');
+
+  var leadersHtml = leaders.length
+    ? '<table class="lt"><thead><tr><th>Name</th><th>Signal you see</th><th>Next cultivation step</th></tr></thead><tbody>'
+      + leaders.map(function(l){return '<tr><td>'+l.name+'</td><td>'+l.signal+'</td><td>'+l.next+'</td></tr>';}).join('')
+      + '</tbody></table>'
+    : '<p class="empty">No leaders named yet.</p>';
+
+  var habitsHtml = habits.length
+    ? '<div class="hg">'+habits.map(function(h){return '<div class="hi"><div class="hd"></div>'+h+'</div>';}).join('')+'</div>'
+    : '';
+
+  var stageHtml = stageNames.map(function(s,i){
+    return stageNotes[i].length
+      ? '<div class="snr"><div class="snl">'+s+'</div><div class="snv">'+stageNotes[i].join(' · ')+'</div></div>'
+      : '';
+  }).join('');
+
+  var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'
+    + '<title>Community Revenue Map — '+name+'</title>'
+    + '<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">'
+    + '<style>'
+    + '*{box-sizing:border-box;margin:0;padding:0}'
+    + 'body{font-family:"DM Sans",Arial,sans-serif;background:#fff;color:#1C1C1A;font-size:11pt}'
+    + '.pg{max-width:720px;margin:0 auto;padding:28px}'
+    + '.hd{background:#0D5C45;color:#fff;padding:24px 28px;margin-bottom:20px;border-radius:8px}'
+    + '.he{font-size:9pt;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:5px}'
+    + '.ht{font-family:"Syne",sans-serif;font-size:22pt;font-weight:800;line-height:1.1;margin-bottom:4px}'
+    + '.hm{font-size:9.5pt;color:rgba(255,255,255,.6)}'
+    + '.hn{font-size:12pt;color:#9FE1CB;margin-top:8px}'
+    + '.sec{margin-bottom:20px}'
+    + '.sl{font-family:"Syne",sans-serif;font-size:8.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#0D5C45;border-bottom:2px solid #D6F0E7;padding-bottom:4px;margin-bottom:12px}'
+    + '.tc{display:grid;grid-template-columns:1fr 1fr;gap:10px}'
+    + '.cb{background:#F2F2EE;border-radius:5px;padding:10px}'
+    + '.cl{font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#6B6B65;margin-bottom:5px}'
+    + '.cv{font-size:10pt;color:#3D3D39;line-height:1.6}'
+    + '.sr{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #E8E8E3}'
+    + '.sr:last-of-type{border-bottom:none}'
+    + '.sd{width:9px;height:9px;border-radius:50%;flex-shrink:0}'
+    + '.sn{font-size:10pt;color:#1C1C1A;flex:1}'
+    + '.sa{font-size:11.5pt;font-weight:500;color:#1C1C1A}'
+    + '.tb{background:#0D5C45;border-radius:5px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;margin-top:10px}'
+    + '.tl{font-size:9.5pt;color:rgba(255,255,255,.6)}'
+    + '.tv{font-family:"Syne",sans-serif;font-size:18pt;font-weight:800;color:#fff}'
+    + '.pw{display:grid;grid-template-columns:1fr 16px 1fr 16px 1fr 16px 1fr;gap:3px;align-items:center;margin-bottom:10px}'
+    + '.ps{background:#E1F5EE;border-radius:4px;padding:6px 4px;text-align:center}'
+    + '.ps strong{display:block;font-size:9pt;color:#0D5C45;margin-bottom:1px}'
+    + '.ps span{font-size:7.5pt;color:#6B6B65}'
+    + '.pa{font-size:11pt;color:#9E9E97;text-align:center}'
+    + '.snr{margin-bottom:6px}'
+    + '.snl{font-size:8pt;font-weight:700;color:#0D5C45;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}'
+    + '.snv{font-size:10pt;color:#3D3D39;line-height:1.5}'
+    + '.lt{width:100%;border-collapse:collapse;font-size:10pt}'
+    + '.lt th{background:#0D5C45;color:#fff;padding:6px 8px;text-align:left;font-size:8pt;font-weight:600;text-transform:uppercase;letter-spacing:.05em}'
+    + '.lt td{padding:6px 8px;border-bottom:1px solid #E8E8E3;color:#3D3D39;vertical-align:top}'
+    + '.lt tr:last-child td{border-bottom:none}'
+    + '.lt tr:nth-child(even) td{background:#F9F9F7}'
+    + '.hg{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:12px}'
+    + '.hi{display:flex;align-items:flex-start;gap:7px;font-size:9.5pt;color:#3D3D39;line-height:1.4;padding:5px 7px;background:#F2F2EE;border-radius:4px}'
+    + '.hd{width:7px;height:7px;background:#1A8C6A;border-radius:50%;flex-shrink:0;margin-top:3px}'
+    + '.empty{color:#9E9E97;font-style:italic;font-size:10pt}'
+    + '.ft{margin-top:24px;padding-top:14px;border-top:1px solid #E8E8E3;font-size:8pt;color:#9E9E97;text-align:center}'
+    + '@media print{'
+    + 'body{background:#fff}.pg{padding:16px;max-width:100%}'
+    + '.hd,.tb,.lt th,.ps{-webkit-print-color-adjust:exact;print-color-adjust:exact}'
+    + '}'
+    + '</style></head><body>'
+    + '<div class="pg">'
+    + '<div class="hd">'
+    + '<div class="he">Dance Business Bootcamp 2026 &middot; Dance/USA</div>'
+    + '<div class="ht">Community Revenue Map</div>'
+    + '<div class="hm">Rooted Rhythms Framework &middot; Facilitated by Nneka Okeke</div>'
+    + '<div class="hn">'+name+(org!=='My project'?' &middot; '+org:'')+'</div>'
+    + '</div>'
+    + '<div class="sec"><div class="sl">Step 1 &mdash; Relationship Asset Inventory</div>'
+    + '<div class="tc">'
+    + '<div class="cb"><div class="cl">Community &amp; Audience</div><div class="cv">'+(tags.comm.length?tags.comm.join(' &middot; '):'<span class="empty">Not filled in</span>')+'</div></div>'
+    + '<div class="cb"><div class="cl">Institutional &amp; Organizational</div><div class="cv">'+(tags.inst.length?tags.inst.join(' &middot; '):'<span class="empty">Not filled in</span>')+'</div></div>'
+    + '<div class="cb"><div class="cl">Individual Champions</div><div class="cv">'+(tags.champ.length?tags.champ.join(' &middot; '):'<span class="empty">Not filled in</span>')+'</div></div>'
+    + '<div class="cb"><div class="cl">Platform &amp; In-Kind</div><div class="cv">'+(tags.plat.length?tags.plat.join(' &middot; '):'<span class="empty">Not filled in</span>')+'</div></div>'
+    + '</div></div>'
+    + '<div class="sec"><div class="sl">Step 2 &mdash; Revenue Stream Mapping</div>'
+    + streamsHtml
+    + '<div class="tb"><span class="tl">Total estimated annual revenue</span><span class="tv">$'+total.toLocaleString()+'</span></div>'
+    + '</div>'
+    + '<div class="sec"><div class="sl">Step 3 &mdash; Community Giving Pathway</div>'
+    + '<div class="pw"><div class="ps"><strong>Encounter</strong><span>First exposure</span></div><div class="pa">&rarr;</div><div class="ps"><strong>Engage</strong><span>Shows up</span></div><div class="pa">&rarr;</div><div class="ps"><strong>Give</strong><span>Contributes</span></div><div class="pa">&rarr;</div><div class="ps"><strong>Sustain</strong><span>Keeps coming</span></div></div>'
+    + stageHtml
+    + '</div>'
+    + '<div class="sec"><div class="sl">Step 4 &mdash; Community Leader Cultivation</div>'
+    + leadersHtml
+    + (habits.length?'<div class="sl" style="margin-top:14px">Cultivation habits committed to</div>'+habitsHtml:'')
+    + '</div>'
+    + '<div class="ft">Rooted Rhythms: Designing Culturally Grounded Revenue Ecosystems for Dance Artists and Communities<br>Dance Business Bootcamp 2026 &middot; Dance/USA &middot; Facilitated by Nneka Okeke</div>'
+    + '</div>'
+    + '<script>window.onload=function(){window.print()}<\/script>'
+    + '</body></html>';
+
+  var blob = new Blob([html], {type:'text/html'});
   var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'Community_Revenue_Map_' + name.replace(/\s+/g,'_') + '.txt';
-  a.click();
-  URL.revokeObjectURL(url);
+  var win = window.open(url, '_blank');
+  if(!win) {
+    var a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.click();
+  }
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 10000);
 }
 
 // Enter key support
